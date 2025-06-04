@@ -64,6 +64,8 @@ def main(
             completion = batch_completions[0]["generation"]
             print(new_text, end="", flush=True)
         print("\n\n==================================\n")
+        # 将本轮对话加入历史，便于多轮对话
+        model_prompter.update_template(completion)
 
 
 if __name__ == "__main__":

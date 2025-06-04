@@ -119,6 +119,8 @@ def main(
             print(f"\033[91m{next_text}\033[0m", end="", flush=True)  # 红色文本
 
         console.print("\n[bold green]==================================[/bold green]\n")
+        # 更新模板以保存历史会话
+        model_prompter.update_template(completion)
 
 
 if __name__ == "__main__":

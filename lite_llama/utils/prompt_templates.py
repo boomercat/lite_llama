@@ -192,7 +192,8 @@ class Llama3Prompter(BasePrompter):
     """
 
     def __init__(self):
-        system_inst = ""
+        # Llama3 对话格式不需要系统提示时，直接从 user 开始
+        system_inst = None
         role1 = "<|start_header_id|>user<|end_header_id|>\n\n"
         role2 = "<|start_header_id|>assistant<|end_header_id|>\n\n"
         sen_spliter = "<|eot_id|>"
@@ -201,6 +202,22 @@ class Llama3Prompter(BasePrompter):
         super().__init__(
             system_inst, role1, role2, sen_spliter, qa_spliter, colon=colon
         )
+
+    def update_template(self, outputs, chunk_prefilling: int = 0):
+        """Update template for multi-turn conversation."""
+        if chunk_prefilling:
+            self.template = self.role1 + "{prompt}" + self.sen_spliter + self.role2
+        else:
+            self.template = (
+                self.model_input
+                + outputs.strip()
+                + self.sen_spliter
+                + self.role1
+                + "{prompt}"
+                + self.sen_spliter
+                + self.role2
+            )
+        self.model_input = None
 
 
 class LlavaLlamaPrompter(BasePrompter):
@@ -238,6 +255,22 @@ class LlavaLlama3Prompter(BasePrompter):
         super().__init__(
             system_inst, role1, role2, sen_spliter, qa_spliter, colon=colon
         )
+
+    def update_template(self, outputs, chunk_prefilling: int = 0):
+        """Update template for multi-turn conversation with vision."""
+        if chunk_prefilling:
+            self.template = self.role1 + "{prompt}" + self.sen_spliter + self.role2
+        else:
+            self.template = (
+                self.model_input
+                + outputs.strip()
+                + self.sen_spliter
+                + self.role1
+                + "{prompt}"
+                + self.sen_spliter
+                + self.role2
+            )
+        self.model_input = None
 
 
 class Qwen2Prompter(BasePrompter):

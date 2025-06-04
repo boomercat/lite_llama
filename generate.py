@@ -100,6 +100,8 @@ def main(
         text_msg += new_text
 
     print("\n\n==================================\n")
+    # 记录对话结果，支持后续多轮对话
+    model_prompter.update_template(completion)
     print(
         f"Time for inference: {(end - start):.2f} sec, {count_tokens(text_msg, generator.tokenizer) / (end - start):.2f} tokens/sec"
     )
